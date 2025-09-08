@@ -9,4 +9,6 @@ func main()  {
 
 	callGetValueAndSum := getValueAndSum()
 	fmt.Println("Total Of Sum After The Inputs Is:", callGetValueAndSum)
+
+	Condition()
 }
