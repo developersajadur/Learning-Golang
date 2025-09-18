@@ -18,6 +18,7 @@ type User struct {
 	age int
  }
 
+
  var user1 = User{name: "Sojib", age: 24}
 
  func (user User) getName() string {
@@ -29,6 +30,14 @@ type User struct {
   }
 
 
+  var arr = [5]int {
+	1,2,3,4,5,
+  }
+
+// arr2 should be declared inside a function, not at the package level
+
+
+
 func main()  {
 	fmt.Println("Welcome To golang")
 	higherOrderFunc(sumFunc)
@@ -38,7 +47,11 @@ func main()  {
 
 		getFullDetails(user1)
 
- fmt.Println("The name is:", user1.getName())
+	fmt.Println("The name is:", user1.getName())
+	fmt.Println(arr)
+
+	arr2 := []int{6, 7, 8, 9, 10}
+	fmt.Println(arr2)
 
 }
 
