@@ -13,10 +13,6 @@ import "fmt"
 // - Initialize global variables
 // - Setup configurations
 // - Preload resources
-//
-// NOTE:
-// - You can have multiple `init()` functions within the same package.
-// - They run in the order they are defined.
 func init() {
 	fmt.Println("Init: This should be the first to execute")
 }
@@ -32,7 +28,6 @@ func Condition() {
 	fmt.Println("Please Input Your Age:")
 	fmt.Scanln(&age) // Reads user input from the console
 
-	// Simple if-else conditional check
 	if age < 18 {
 		fmt.Println("Oops, you cannot do this")
 	} else {
@@ -54,13 +49,11 @@ type User struct {
 var user1 = User{name: "Sojib", age: 24}
 
 // getName returns the user's name.
-// It is a value receiver method, meaning it works on a copy of the struct.
 func (user User) getName() string {
 	return user.name
 }
 
 // getAge returns the user's age.
-// It is also a value receiver method.
 func (user User) getAge() int {
 	return user.age
 }
@@ -70,14 +63,9 @@ func (user User) getAge() int {
 ////////////////////////////////////////////////////////////////////////////////
 
 // arr is a fixed-size array of 5 integers.
-// NOTE: Arrays in Go are value types and have a fixed length.
 var arr = [5]int{1, 2, 3, 4, 5}
 
 // getUserPointer demonstrates how to work with pointers in Go.
-// It takes a pointer to an array and returns the same pointer.
-//
-// Example usage:
-// arrPtr := getUserPointer(&arr)
 func getUserPointer(usr *[5]int) *[5]int {
 	return usr
 }
@@ -88,12 +76,6 @@ func getUserPointer(usr *[5]int) *[5]int {
 
 // higherOrderFunc is a higher-order function that accepts another function
 // as an argument and executes it with two integer values.
-//
-// Parameters:
-// - HOF: a function that takes two integers and returns nothing.
-//
-// Example usage:
-// higherOrderFunc(sumFunc)
 func higherOrderFunc(HOF func(int, int)) {
 	HOF(10, 20)
 }
@@ -108,45 +90,95 @@ func sumFunc(num1 int, num2 int) {
 ////////////////////////////////////////////////////////////////////////////////
 
 // getFullDetails prints the complete details of a User.
-// This demonstrates passing structs by value to a function.
 func getFullDetails(usr User) {
 	fmt.Println("The Name is from full details:", usr.name)
 	fmt.Println("The Age is from full details:", usr.age)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// Slice Demonstration
+////////////////////////////////////////////////////////////////////////////////
+
+// demonstrateSlices shows different types of slices and operations on them.
+func demonstrateSlices() {
+	fmt.Println("\n--- Slice Demonstration ---")
+
+	// 1. Create a slice directly
+	sliceArr := []int{1, 2, 3, 4, 5}
+	fmt.Println("Original Slice:", sliceArr)
+	fmt.Println("Length:", len(sliceArr)) // total number of elements
+	fmt.Println("Capacity:", cap(sliceArr)) // total underlying array size
+
+	// 2. Create a slice from another slice (sub-slicing)
+	sliceArr1 := sliceArr[2:4] // includes index 2, excludes index 4
+	fmt.Println("Sub-slice (sliceArr[2:4]):", sliceArr1)
+
+	// 3. Append to a slice
+	sliceArr = append(sliceArr, 6, 7)
+	fmt.Println("After Append:", sliceArr)
+	fmt.Println("Length After Append:", len(sliceArr))
+	fmt.Println("Capacity After Append:", cap(sliceArr))
+
+	// 4. Make a slice using make()
+	// make([]Type, length, capacity)
+	dynamicSlice := make([]int, 3, 5)
+	dynamicSlice[0] = 10
+	dynamicSlice[1] = 20
+	dynamicSlice[2] = 30
+	fmt.Println("Slice created using make():", dynamicSlice)
+	fmt.Println("Length:", len(dynamicSlice))
+	fmt.Println("Capacity:", cap(dynamicSlice))
+
+	// 5. Copy a slice
+	copySlice := make([]int, len(sliceArr))
+	copy(copySlice, sliceArr)
+	fmt.Println("Copied Slice:", copySlice)
+
+	// 6. Nil slice example
+	var nilSlice []int
+	fmt.Println("Nil Slice:", nilSlice)
+	fmt.Println("Is Nil?", nilSlice == nil)
+
+	// 7. Slice of slices (multi-dimensional slice)
+	matrix := [][]int{
+		{1, 2, 3},
+		{4, 5, 6},
+		{7, 8, 9},
+	}
+	fmt.Println("Multi-dimensional Slice (Matrix):", matrix)
+}
+
+////////////////////////////////////////////////////////////////////////////////
 // Main Function
 ////////////////////////////////////////////////////////////////////////////////
 
-// main is the entry point of the Go program.
 func main() {
 	fmt.Println("Welcome To Golang")
 
 	// Example of using a higher-order function
 	higherOrderFunc(sumFunc)
 
+	// Demonstrate different slice operations
+	demonstrateSlices()
+
 	// Anonymous function example
 	func(name string) {
 		fmt.Println("Hello", name)
 	}("Sojib")
 
-	// Printing user details using a helper function
+	// Printing user details
 	getFullDetails(user1)
 
-	// Demonstrating working with pointers
+	// Demonstrating pointers
 	usrDetails := getUserPointer(&arr)
 	fmt.Println("The User Details are:", usrDetails)
 
 	// Accessing struct methods
 	fmt.Println("The name is:", user1.getName())
 
-	// Printing a fixed-size array
+	// Fixed-size array
 	fmt.Println(arr)
 
-	// Demonstrating a slice, which is more flexible than arrays
-	arr2 := []int{6, 7, 8, 9, 10}
-	fmt.Println(arr2)
-
-	// Run the condition checker for user input
+	// Run the condition checker
 	Condition()
 }
