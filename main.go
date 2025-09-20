@@ -45,6 +45,13 @@ type User struct {
 	age  int
 }
 
+// The function coppyFunc can accept any number of integers, including none, and 
+// prints them as a slice. This is useful for flexible functions like logging, summing numbers, etc.
+
+func coppyFunc(hello ...int){
+	fmt.Println(hello)
+}
+
 // Global variable to demonstrate how to initialize a struct at the package level.
 var user1 = User{name: "Sojib", age: 24}
 
@@ -155,6 +162,38 @@ func demonstrateSlices() {
 func main() {
 	fmt.Println("Welcome To Golang")
 
+// Demonstrating basic (primitive) data types in Go
+// -------------------------------------------------
+	
+// String type - used to store textual data
+var name string = "Sojib"
+
+// Integer type - stores whole numbers (can be positive or negative)
+var age int = 24
+
+// Unsigned Integer type - stores only positive whole numbers (no negatives)
+var age2 uint = 30
+
+// Signed Integer with limited range (int8 can hold values from -128 to 127)
+var age3 int8 = 127
+// var age3 int8 = 128 // ❌ This will cause an overflow error because int8's max value is 127
+
+// Blank identifier (_) is used to avoid "unused variable" compilation errors
+_ = age2 
+
+// Boolean type - represents true or false values
+var isStudent bool = false
+
+// Floating-point type - stores decimal numbers
+var height float64 = 5.9
+
+// Printing variable values to the console
+fmt.Println("Name:", name)
+fmt.Println("Age:", age, age3)
+fmt.Println("Is Student:", isStudent)
+fmt.Println("Height:", height)
+
+
 	// Example of using a higher-order function
 	higherOrderFunc(sumFunc)
 
@@ -179,6 +218,17 @@ func main() {
 	// Fixed-size array
 	fmt.Println(arr)
 
+	coppyFunc(1,2,3,4,5,6,7,8,9)
+
+	numbers := [...]int{1,2,3,4,5}
+	for i:=0; i<len(numbers); i++{
+		if i == 3 {
+			// break
+			// continue
+		}
+		fmt.Println(i)
+	}
+
 	// Run the condition checker
-	Condition()
+	// Condition()
 }
