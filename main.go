@@ -1,6 +1,10 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+
+	_ "golang.org/x/tools/go/analysis/passes/defers"
+)
 
 ////////////////////////////////////////////////////////////////////////////////
 // Initialization Section
@@ -8,7 +12,7 @@ import "fmt"
 
 // init function is a special function in Go.
 // It automatically executes **before the main() function**.
-// 
+//
 // Common use cases:
 // - Initialize global variables
 // - Setup configurations
@@ -159,6 +163,12 @@ func demonstrateSlices() {
 // Main Function
 ////////////////////////////////////////////////////////////////////////////////
 
+func defersExample() {
+	defer fmt.Println("This is the first defer statement")
+	defer fmt.Println("This is the second defer statement")
+	fmt.Println("Inside defersExample function")
+}
+
 func main() {
 	fmt.Println("Welcome To Golang")
 
@@ -228,6 +238,7 @@ fmt.Println("Height:", height)
 		}
 		fmt.Println(i)
 	}
+	defersExample()
 
 	// Run the condition checker
 	// Condition()
