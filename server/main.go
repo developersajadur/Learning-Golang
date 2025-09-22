@@ -36,7 +36,7 @@ func handleGetPersons(w http.ResponseWriter, r *http.Request){
 
 
  type Person struct {
-	Name string `json:"name`
+	Name string `json:"name"`
 	Age  int  `json:"age"`
  }
 
