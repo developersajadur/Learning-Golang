@@ -27,11 +27,34 @@ func handleGetPersons(w http.ResponseWriter, r *http.Request){
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	// w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.WriteHeader(http.StatusOK)
 
 	encoded := json.NewEncoder(w)
 	encoded.Encode(people)
+}
+
+func handleCreatePerson(w http.ResponseWriter, r *http.Request){
+	if r.Method != http.MethodPost{
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return;
+	}
+			w.Header().Set("Access-Control-Allow-Origin", "*")
+
+	var newPerson Person
+
+	err:= json.NewDecoder(r.Body).Decode(&newPerson)
+	if err!= nil{
+		http.Error(w, "Bad request", http.StatusBadRequest)
+		return;
+	}
+	people = append(people, newPerson)
+	
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
+		encoded := json.NewEncoder(w)
+	encoded.Encode(people)
+
 }
 
 
@@ -48,6 +71,7 @@ func handleGetPersons(w http.ResponseWriter, r *http.Request){
 	mux.HandleFunc("/", handleRootPath)
 
 	mux.HandleFunc("/persons", handleGetPersons)
+	mux.HandleFunc("/persons/create", handleCreatePerson)
 
 	fmt.Println("Starting server at :8080")
 
