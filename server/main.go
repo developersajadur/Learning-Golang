@@ -7,71 +7,48 @@ import (
 )
 
 
-func handleRootPath(w http.ResponseWriter, r *http.Request){
-	if r.Method != http.MethodGet{
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-		return;
-	}
+ type Person struct {
+	Name string `json:"name"`
+	Age  int  `json:"age"`
+ }
+  var people = []Person{}
 
-	w.Header().Set("Content-Type", "text/plain")
-	// w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.WriteHeader(http.StatusOK)
+func handleRootPath(w http.ResponseWriter, r *http.Request){
+	handleHeaders(w)
 	w.Write([]byte("Welcome to the Person API! Use /persons to get the list of persons."))
 }
 
 
 func handleGetPersons(w http.ResponseWriter, r *http.Request){
-	if r.Method != http.MethodGet{
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-		return;
-	}
 
-	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.WriteHeader(http.StatusOK)
+	handleHeaders(w)
 
-	encoded := json.NewEncoder(w)
-	encoded.Encode(people)
+	handleEncoder(w, people)
 }
 
 func handleCreatePerson(w http.ResponseWriter, r *http.Request){
-	if r.Method != http.MethodPost{
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-		return;
-	}
-			w.Header().Set("Access-Control-Allow-Origin", "*")
+		handleHeaders(w)
 
 	var newPerson Person
 
-	err:= json.NewDecoder(r.Body).Decode(&newPerson)
+	err:= handleDecoder(r, &newPerson)
 	if err!= nil{
-		http.Error(w, "Bad request", http.StatusBadRequest)
-		return;
+		http.Error(w, "Invalid request payload", http.StatusBadRequest)
+		return
 	}
 	people = append(people, newPerson)
-	
-	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
-		encoded := json.NewEncoder(w)
-	encoded.Encode(people)
+	handleEncoder(w, newPerson)
 
 }
-
-
- type Person struct {
-	Name string `json:"name"`
-	Age  int  `json:"age"`
- }
-
- var people = []Person{}
 
  func main() {
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("/", handleRootPath)
+	mux.Handle("GET /", http.HandlerFunc(handleRootPath))
 
-	mux.HandleFunc("/persons", handleGetPersons)
-	mux.HandleFunc("/persons/create", handleCreatePerson)
+	mux.Handle("GET /persons", http.HandlerFunc(handleGetPersons))
+	mux.Handle("POST /persons/create", http.HandlerFunc(handleCreatePerson))
 
 	fmt.Println("Starting server at :8080")
 
@@ -84,16 +61,47 @@ func handleCreatePerson(w http.ResponseWriter, r *http.Request){
 
 	}
 
+// Predefined list of people
+	var peoples = []Person{
+		{Name: "Alice", Age: 30},
+		{Name: "Bob", Age: 25},
+		{Name: "Charlie", Age: 35},
+		{Name: "Diana", Age: 28},
+		{Name: "Ethan", Age: 32},
+		{Name: "Fiona", Age: 27},
+		{Name: "George", Age: 29},
+		{Name: "Hannah", Age: 31},
+		{Name: "Ian", Age: 26},
+		{Name: "Jane", Age: 33},
+	}
 
+	// Initialize the people slice with predefined data
 	func init(){
-		people = append(people, Person{Name: "Alice", Age: 30})
-		people = append(people, Person{Name: "Bob", Age: 25})
-		people = append(people, Person{Name: "Charlie", Age: 35})
-		people = append(people, Person{Name: "Diana", Age: 28})
-		people = append(people, Person{Name: "Ethan", Age: 32})
-		people = append(people, Person{Name: "Fiona", Age: 27})
-		people = append(people, Person{Name: "George", Age: 29})
-		people = append(people, Person{Name: "Hannah", Age: 31})
-		people = append(people, Person{Name: "Ian", Age: 26})
-		people = append(people, Person{Name: "Jane", Age: 33})
+		people = peoples
+	} 
+
+
+
+	// Helper functions for handling headers, encoding, and decoding
+
+	func handleHeaders(w http.ResponseWriter){
+	w.Header().Set("Content-Type", "text/plain")
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+	w.WriteHeader(http.StatusOK)
+	}
+
+	func handleEncoder(w http.ResponseWriter, data interface{}){
+		encoded := json.NewEncoder(w)
+		encoded.Encode(data)
+	}
+
+	func handleDecoder(r *http.Request, data interface{}) error{
+		err:= json.NewDecoder(r.Body).Decode(data)
+		if err!= nil{
+			return err
+		}
+		return nil
 	}
