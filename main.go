@@ -10,8 +10,6 @@ import (
 // Initialization Section
 ////////////////////////////////////////////////////////////////////////////////
 
-// init function is a special function in Go.
-// It automatically executes **before the main() function**.
 //
 // Common use cases:
 // - Initialize global variables
